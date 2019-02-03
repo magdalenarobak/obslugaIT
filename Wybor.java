@@ -1,18 +1,24 @@
 package it;
 
+import java.sql.*;
+import javax.swing.*;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Wybor {
 
 	private JFrame frame;
 
 	/**
-	 * Launch the application.
+	 * 
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -28,14 +34,14 @@ public class Wybor {
 	}
 
 	/**
-	 * Create the application.
+	 * 
 	 */
 	public Wybor() {
 		initialize();
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * 
 	 */
 	private void initialize() {
 		frame = new JFrame();
@@ -49,11 +55,47 @@ public class Wybor {
 		frame.getContentPane().add(lblWybierzOpcj);
 		
 		JButton btnZgoszenie = new JButton("Zg\u0142oszenie");
+		btnZgoszenie.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				frame.dispose();
+				Zgloszenia administrator = new Zgloszenia();
+				administrator.setVisible(true);
+	
+			}
+		});
 		btnZgoszenie.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		btnZgoszenie.setBounds(79, 205, 196, 51);
 		frame.getContentPane().add(btnZgoszenie);
 		
 		JButton btnAdministrator = new JButton("Administrator");
+		btnAdministrator.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				try {
+				    JFrame frame = new JFrame("Admin");
+				    int code = Integer.parseInt(JOptionPane.showInputDialog(frame, "Wprowadz haslo", "Admin", JOptionPane.WARNING_MESSAGE));
+				   
+				    if (code == 1029)
+				    {
+				    System.out.printf("OK");
+				    
+				    frame.dispose();
+			    	Admin zgloszenie = new Admin();
+			    	zgloszenie.setVisible(true);
+					
+				    }
+				    else {
+				    JOptionPane.showMessageDialog(null, "B³¹d autoryzacji");
+
+				    }
+				}catch(Exception e)
+				{
+					JOptionPane.showMessageDialog(null, e);
+				}
+				  
+			}
+		});
 		btnAdministrator.setFont(new Font("Tahoma", Font.PLAIN, 25));
 		btnAdministrator.setBounds(407, 204, 210, 52);
 		frame.getContentPane().add(btnAdministrator);
