@@ -17,9 +17,6 @@ public class Wybor {
 
 	private JFrame frame;
 
-	/**
-	 * 
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -33,16 +30,13 @@ public class Wybor {
 		});
 	}
 
-	/**
-	 * 
-	 */
+	Connection polaczeniezbaza=null;
+	
 	public Wybor() {
 		initialize();
+		polaczeniezbaza = Polaczeniezbaza.dbPolaczenie();
 	}
 
-	/**
-	 * 
-	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 686, 411);
