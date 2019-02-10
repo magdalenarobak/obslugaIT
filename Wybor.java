@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import com.sun.prism.Image;
+
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -39,16 +41,19 @@ public class Wybor {
 
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 686, 411);
+		frame.setBounds(100, 100, 878, 496);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JLabel lblWybierzOpcj = new JLabel("Wybierz opcj\u0119");
 		lblWybierzOpcj.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		lblWybierzOpcj.setBounds(241, 88, 210, 74);
+		lblWybierzOpcj.setBounds(392, 71, 210, 74);
 		frame.getContentPane().add(lblWybierzOpcj);
 		
 		JButton btnZgoszenie = new JButton("Zg\u0142oszenie");
+		java.awt.Image obraz1 = new ImageIcon(this.getClass().getResource("/help.png")).getImage();
+		btnZgoszenie.setIcon(new ImageIcon(obraz1));
+		
 		btnZgoszenie.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -59,10 +64,13 @@ public class Wybor {
 			}
 		});
 		btnZgoszenie.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		btnZgoszenie.setBounds(79, 205, 196, 51);
+		btnZgoszenie.setBounds(24, 251, 331, 97);
 		frame.getContentPane().add(btnZgoszenie);
 		
 		JButton btnAdministrator = new JButton("Administrator");
+		java.awt.Image obraz2 = new ImageIcon(this.getClass().getResource("/admin.png")).getImage();
+		btnAdministrator.setIcon(new ImageIcon(obraz2));
+		
 		btnAdministrator.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -91,7 +99,13 @@ public class Wybor {
 			}
 		});
 		btnAdministrator.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		btnAdministrator.setBounds(407, 204, 210, 52);
+		btnAdministrator.setBounds(452, 251, 369, 97);
 		frame.getContentPane().add(btnAdministrator);
+		
+		JLabel lblObraz = new JLabel("");
+		java.awt.Image obraz = new ImageIcon(this.getClass().getResource("/pomoc.png")).getImage();
+		lblObraz.setIcon(new ImageIcon(obraz));
+		lblObraz.setBounds(240, 32, 128, 138);
+		frame.getContentPane().add(lblObraz);
 	}
 }

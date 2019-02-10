@@ -12,7 +12,7 @@ public class Polaczeniezbaza {
 	{
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection polaczenie=DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Ma³gosia\\Desktop\\IT\\zgloszenia1.sqlite");
+			Connection polaczenie=DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Ma³gosia\\Desktop\\IT\\zgloszenia.sqlite");
 			System.out.println("Poprawne polaczenie z baza");
 			return polaczenie;
 			
