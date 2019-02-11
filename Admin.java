@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.FileWriter;
 public class Admin extends JFrame {
 
 	private JPanel contentPane;
@@ -292,6 +293,55 @@ public class Admin extends JFrame {
 		comboBox_3.setModel(new DefaultComboBoxModel(new String[] {"tak", "nie"}));
 		comboBox_3.setBounds(173, 241, 145, 28);
 		contentPane.add(comboBox_3);
+		
+		JButton btnGenerujRaport = new JButton("Generuj raport");
+		btnGenerujRaport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				FileWriter plikWy = null;
+				String raport = "raport.txt";
+				try {
+					String q = "select * from zgloszenia";
+					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+					ResultSet rs = pst.executeQuery();
+					
+					plikWy = new FileWriter(raport);
+					while(rs.next())
+					{
+						String Numer_zgloszenia = rs.getString("Numer_zgloszenia");
+						String Data_zgloszenia = rs.getString("Data_zgloszenia");
+						String Miejsce = rs.getString("Miejsce");
+						String Realizacja = rs.getString("Realizacja");
+						String Opis_problemu = rs.getString("Opis_problemu");
+						String Obszar_usterki = rs.getString("Obszar_usterki");
+						String Osoba = rs.getString("Osoba");
+						String Usterka_krytyczna = rs.getString("Usterka_krytyczna");
+						
+						
+						plikWy.write(Numer_zgloszenia+" "
+								+Data_zgloszenia+" "
+								+Miejsce+" "
+								+Realizacja+" "
+								+Opis_problemu+" "
+								+Obszar_usterki+" "
+								+Osoba+" "
+								+Usterka_krytyczna+"\r\n");
+						
+					}
+					plikWy.close();
+					
+					Statement stTruncate = polaczeniezbaza.createStatement();
+					stTruncate.execute("delete from zgloszenia");
+					
+					
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+		btnGenerujRaport.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnGenerujRaport.setBounds(542, 220, 208, 33);
+		contentPane.add(btnGenerujRaport);
 		wypelnienieComboBox();
 		wypelnienieComboBox_2();
 	}
