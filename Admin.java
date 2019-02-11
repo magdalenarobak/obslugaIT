@@ -44,6 +44,36 @@ public class Admin extends JFrame {
 	Connection polaczeniezbaza=null;
 	private JTextField textField_1;
 	
+	public void wypelnienieComboBox() {
+		try {
+			String q ="select distinct Data_zgloszenia from zgloszenia group by Data_zgloszenia";
+			PreparedStatement pst =polaczeniezbaza.prepareStatement(q);
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()) {
+
+				comboBox.addItem(rs.getString("Data_zgloszenia"));
+		
+			}
+		}catch(Exception e) {
+				e.printStackTrace();
+				}
+	}
+	
+	public void wypelnienieComboBox_2() {
+		try {
+			String q ="select distinct Miejsce from zgloszenia group by Miejsce";
+			PreparedStatement pst =polaczeniezbaza.prepareStatement(q);
+			ResultSet rs = pst.executeQuery();
+			
+			while(rs.next()) {
+				comboBox_2.addItem(rs.getString("Miejsce"));
+			}
+		}catch(Exception e) {
+				e.printStackTrace();
+				}
+	}
+	
 	public Admin() {
 		polaczeniezbaza = Polaczeniezbaza.dbPolaczenie();
 		
@@ -55,6 +85,22 @@ public class Admin extends JFrame {
 		contentPane.setLayout(null);
 		
 		comboBox = new JComboBox();
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String data = (String)comboBox.getSelectedItem();
+					String q = "select * from zgloszenia where Data_zgloszenia=?";
+					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+					pst.setString(1,data);
+					ResultSet rs = pst.executeQuery();
+					
+					table.setModel(DbUtils.resultSetToTableModel(rs));
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
 		comboBox.setBounds(173, 41, 145, 28);
 		contentPane.add(comboBox);
 		
@@ -99,6 +145,23 @@ public class Admin extends JFrame {
 		contentPane.add(lblZrealizowane);
 		
 		comboBox_2 = new JComboBox();
+		comboBox_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				try {
+					String miejsce = (String)comboBox_2.getSelectedItem();
+					String q = "select * from zgloszenia where Miejsce=?";
+					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+					pst.setString(1,miejsce);
+					ResultSet rs = pst.executeQuery();
+					
+					table.setModel(DbUtils.resultSetToTableModel(rs));
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
 		comboBox_2.setBounds(173, 119, 145, 33);
 		contentPane.add(comboBox_2);
 		
@@ -203,5 +266,33 @@ public class Admin extends JFrame {
 		textField_1.setBounds(486, 92, 201, 36);
 		contentPane.add(textField_1);
 		textField_1.setColumns(10);
+		
+		JLabel lblUsterkaKrytyczna = new JLabel("Usterka krytyczna");
+		lblUsterkaKrytyczna.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblUsterkaKrytyczna.setBounds(10, 238, 135, 28);
+		contentPane.add(lblUsterkaKrytyczna);
+		
+		JComboBox comboBox_3 = new JComboBox();
+		comboBox_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					String krytyczna = (String)comboBox_3.getSelectedItem();
+					String q = "select * from zgloszenia where Usterka_krytyczna=?";
+					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+					pst.setString(1,krytyczna);
+					ResultSet rs = pst.executeQuery();
+					
+					table.setModel(DbUtils.resultSetToTableModel(rs));
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		});
+		comboBox_3.setModel(new DefaultComboBoxModel(new String[] {"tak", "nie"}));
+		comboBox_3.setBounds(173, 241, 145, 28);
+		contentPane.add(comboBox_3);
+		wypelnienieComboBox();
+		wypelnienieComboBox_2();
 	}
 }

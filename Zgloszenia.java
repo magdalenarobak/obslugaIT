@@ -7,9 +7,10 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.util.Date;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import net.proteanit.sql.DbUtils;
+
 import javax.swing.*;
 import java.awt.Font;
 import java.awt.event.ActionListener;
@@ -20,6 +21,10 @@ public class Zgloszenia extends JFrame {
 	private JTextField txtUsterka;
 	private JTextField txtMiejsce;
 	private JTextField txtOsoba;
+	private JComboBox comboBox ;
+	private JComboBox comboBox_2;
+	private JComboBox comboBox_1;
+	private JFrame frame;
 
 	/**
 	 * Launch the application.
@@ -38,9 +43,11 @@ public class Zgloszenia extends JFrame {
 	}
 
 	Connection polaczeniezbaza=null;
+	private JButton btnNiezrealizowane;
 	
 	public Zgloszenia() {
 		polaczeniezbaza = Polaczeniezbaza.dbPolaczenie();
+		frame = new JFrame();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 754, 531);
@@ -51,20 +58,22 @@ public class Zgloszenia extends JFrame {
 		
 		JLabel lblUsterkaKrytyczna = new JLabel("Usterka krytyczna");
 		lblUsterkaKrytyczna.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblUsterkaKrytyczna.setBounds(76, 49, 171, 28);
+		lblUsterkaKrytyczna.setBounds(76, 74, 171, 28);
 		contentPane.add(lblUsterkaKrytyczna);
 		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(335, 49, 185, 35);
+		comboBox_1 = new JComboBox();
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"tak", "nie"}));
+		comboBox_1.setBounds(335, 74, 185, 35);
 		contentPane.add(comboBox_1);
 		
 		JLabel lblObszarUsterki = new JLabel("Obszar usterki");
 		lblObszarUsterki.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblObszarUsterki.setBounds(76, 118, 171, 35);
+		lblObszarUsterki.setBounds(76, 139, 171, 35);
 		contentPane.add(lblObszarUsterki);
 		
-		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setBounds(335, 115, 185, 38);
+		comboBox_2 = new JComboBox();
+		comboBox_2.setModel(new DefaultComboBoxModel(new String[] {"sprz\u0119t", "sie\u0107", "AMMS"}));
+		comboBox_2.setBounds(335, 140, 185, 38);
 		contentPane.add(comboBox_2);
 		
 		JLabel lblDokadnyOpisUsterki = new JLabel("Dok\u0142adny opis usterki");
@@ -84,8 +93,8 @@ public class Zgloszenia extends JFrame {
 		contentPane.add(lblMiejsceUsterki);
 		
 		txtMiejsce = new JTextField();
-		txtMiejsce.setText("Miejsce");
-		txtMiejsce.setBounds(286, 290, 334, 63);
+		txtMiejsce.setText("Nr pokoju");
+		txtMiejsce.setBounds(286, 290, 139, 53);
 		contentPane.add(txtMiejsce);
 		txtMiejsce.setColumns(10);
 		
@@ -107,16 +116,21 @@ public class Zgloszenia extends JFrame {
 				LocalDate today = LocalDate.now();
 				
 				try {
-				String q = "insert into zgloszenia (Data_zgloszenia,Miejsce,Realizacja,Opis_problemu,Obszar_usterki,Osoba) values (?,?,?,?,?,?)";
+				String q = "insert into zgloszenia (Data_zgloszenia,Miejsce,Realizacja,Opis_problemu,Obszar_usterki,Osoba,Usterka_krytyczna) values (?,?,?,?,?,?,?)";
 				PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+				String krytyczna = (String)comboBox_1.getSelectedItem();
+				String usterka = (String)comboBox_2.getSelectedItem();
+				String lokalizacja = (String)comboBox.getSelectedItem();
 				pst.setString(1, (today.getYear() + "-" + today.getMonth()+ "-" +today.getDayOfMonth()) );
-				pst.setString(2, txtMiejsce.getText() );
+				pst.setString(2, txtMiejsce.getText()+ lokalizacja );
 				pst.setString(3, "nie" );
 				pst.setString(4, txtUsterka.getText() );
-				pst.setString(5, txtUsterka.getText() );
+				pst.setString(5, usterka );
 				pst.setString(6, txtOsoba.getText() );
+				pst.setString(7, krytyczna);
 				
-				JOptionPane.showMessageDialog(null, "Zg³oszenie dodane");
+	
+				JOptionPane.showMessageDialog(null, "Zg³oszenie dodane"+ "\n Twój numer zg³oszenia to:" + " " +pobierzNumer());
 				
 				pst.execute();
 				pst.close();
@@ -130,5 +144,51 @@ public class Zgloszenia extends JFrame {
 		btnZgo.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		btnZgo.setBounds(630, 447, 99, 34);
 		contentPane.add(btnZgo);
+		
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Rzesz\u00F3w - Szopena", "Rzesz\u00F3w - Powsta\u0144c\u00F3w Warszawy", "Jas\u0142o", "Jasionka", "Mielec"}));
+		comboBox.setBounds(453, 294, 167, 35);
+		contentPane.add(comboBox);
+		
+		btnNiezrealizowane = new JButton("Wy\u015Bwietl niezrealizowane\r\n");
+		btnNiezrealizowane.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnNiezrealizowane.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				frame.dispose();
+				Niezrealizowane niezrealizowane = new Niezrealizowane();
+				niezrealizowane.setVisible(true);
+			}
+		});
+		btnNiezrealizowane.setBounds(168, 11, 297, 35);
+		contentPane.add(btnNiezrealizowane);
+		
+	}
+
+	private int pobierzNumer() {
+		
+		try {
+			
+			String q="select Numer_zgloszenia from zgloszenia";
+			PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+			
+			ResultSet rs=pst.executeQuery();
+			int wynik=0;
+			while (rs.next()) {
+                wynik = rs.getInt("Numer_zgloszenia");
+                
+			}
+			int numer = wynik+1;
+			
+			rs.close();
+			pst.close();
+			return numer;
+			
+		}catch(Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "B³êdny numer");
+		}
+		return 0;
+		
 	}
 }
