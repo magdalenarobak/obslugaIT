@@ -1,6 +1,6 @@
 package it;
 /**
- * Klasa tworz¹ca okno wyboru i przekierowywuj¹ca nas do nastêpnych okien
+ * Klasa tworzaca okno wyboru i przekierowywujaca nas do nastepnych okien
  * 
  * @author Magdalena Robak
  * @version 1.0.0
@@ -44,7 +44,7 @@ public class Wybor {
 	Connection polaczeniezbaza=null;
 	
 	/**
-	 * Utworzenie aplikacji. Utworzenie po³¹czenia z baz¹ danych.
+	 * Utworzenie aplikacji. Utworzenie polaczenia z baza danych.
 	 */
 	public Wybor() {
 		initialize();
@@ -52,7 +52,7 @@ public class Wybor {
 	}
 
 	/**
-	 * Inicjacja zawartoœci ramki.
+	 * Inicjacja zawartosci ramki.
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	private void initialize() {
@@ -105,9 +105,9 @@ public class Wybor {
 	}
 	
 	/**
-	 * Uruchomienie nowego okna po naciœniêciu przycisku Zg³oszenie.
+	 * Uruchomienie nowego okna po nacisnieciu przycisku Zgloszenie.
 	 */
-	private void zgloszenie() {
+	public void zgloszenie() {
 		
 		frame.dispose();
 		Zgloszenia administrator = new Zgloszenia();
@@ -115,10 +115,10 @@ public class Wybor {
 	}
 	
 	/**
-	 * Uruchomienie nowego okna do wpisania has³a. Po wpisaniu prawid³owego has³a uruchomienie nowego okna.
+	 * Uruchomienie nowego okna do wpisania hasla. Po wpisaniu prawidlowego hasla uruchomienie nowego okna.
 	 * 
 	 */
-	private void administrator() {
+	public void administrator() {
 		
 		try {
 		    JFrame frame = new JFrame("Admin");
@@ -134,7 +134,7 @@ public class Wybor {
 			
 		    }
 		    else {
-		    JOptionPane.showMessageDialog(null, "B³¹d autoryzacji");
+		    JOptionPane.showMessageDialog(null, "Blad autoryzacji");
 
 		    }
 		}catch(Exception e)

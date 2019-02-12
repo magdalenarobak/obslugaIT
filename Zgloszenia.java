@@ -153,7 +153,7 @@ public class Zgloszenia extends JFrame {
 	 * Metoda pobieraj¹ca z bazy danych najnowszy numer zg³oszenia.
 	 * @return numer Zwrot numeru zg³oszenia.
 	 */
-	private int pobierzNumer() {
+	public int pobierzNumer() {
 		
 		try {
 			
@@ -183,7 +183,7 @@ public class Zgloszenia extends JFrame {
 	/**
 	 * Metoda s³u¿¹ca do wstawienia do bazy danych uzupe³nionych przez u¿ytkownika dotycz¹cych zg³oszenia.
 	 */
-	private void zglos() {
+	public void zglos() {
 		LocalDate today = LocalDate.now();
 		
 		try {
@@ -215,7 +215,7 @@ public class Zgloszenia extends JFrame {
 	/**
 	 * Metoda tworzy nowe okno.
 	 */
-	private void wyswietlNiezrealizowane() {
+	public void wyswietlNiezrealizowane() {
 		
 		frame.dispose();
 		Niezrealizowane niezrealizowane = new Niezrealizowane();

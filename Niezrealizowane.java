@@ -66,7 +66,7 @@ public class Niezrealizowane extends JFrame {
 	/**
 	 * Wyœwietlenie bazy danych z niezrealizowanymi usterkami.
 	 */
-	private void wybranie() {
+	public void wybranie() {
 		try {
 			String x = "nie";
 			String q="select Numer_zgloszenia, Data_zgloszenia, Usterka_krytyczna from zgloszenia where Realizacja='"+x+"'";

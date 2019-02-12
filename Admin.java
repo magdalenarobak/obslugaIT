@@ -246,7 +246,7 @@ public class Admin extends JFrame {
 	/**
 	 * Metoda zapisuj¹ca dane z bazy do pliku txt oraz usuwaj¹ca wszystkie rekordy z bazy.
 	 */
-	private void generujRaport() {
+	public void generujRaport() {
 		FileWriter plikWy = null;
 		String raport = "raport.txt";
 		try {
@@ -292,7 +292,7 @@ public class Admin extends JFrame {
 	/**
 	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Usterka_krytyczna.
 	 */
-	private void krytyczna() {
+	public void krytyczna() {
 		try {
 			String krytyczna = (String)comboBox_3.getSelectedItem();
 			String q = "select * from zgloszenia where Usterka_krytyczna=?";
@@ -310,7 +310,7 @@ public class Admin extends JFrame {
 	/**
 	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Data.
 	 */
-	private void data() {
+	public void data() {
 		try {
 			String data = (String)comboBox.getSelectedItem();
 			String q = "select * from zgloszenia where Data_zgloszenia=?";
@@ -328,7 +328,7 @@ public class Admin extends JFrame {
 	/**
 	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Realizacja.
 	 */
-	private void realizacja() {
+	public void realizacja() {
 		try {
 			String realizacja = (String)comboBox_1.getSelectedItem();
 			String q = "select * from zgloszenia where Realizacja=?";
@@ -346,7 +346,7 @@ public class Admin extends JFrame {
 	/**
 	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Miejsce.
 	 */
-	private void miejsce() {
+	public void miejsce() {
 		try {
 			String miejsce = (String)comboBox_2.getSelectedItem();
 			String q = "select * from zgloszenia where Miejsce=?";
@@ -364,7 +364,7 @@ public class Admin extends JFrame {
 	/**
 	 * Metoda wyœwietlaj¹ca bazê danych o wybranym numerze zg³oszenia.
 	 */
-	private void szukaj() {
+	public void szukaj() {
 		try {
 			String q="select * from zgloszenia where Numer_zgloszenia=?";
 			PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
@@ -387,7 +387,7 @@ public class Admin extends JFrame {
 	/**
 	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Realizacja.
 	 */
-	private void zrealizuj() {
+	public void zrealizuj() {
 		try {
 			String akceptacja = "tak";
 			String q = "update zgloszenia set Realizacja='"+akceptacja+"' where Numer_zgloszenia='"+textField_1.getText()+"' ";
@@ -406,7 +406,7 @@ public class Admin extends JFrame {
 	/**
 	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Obszar_usterki.
 	 */
-	private void usterka() {
+	public void usterka() {
 		try {
 			String usterka = (String)comboBox_4.getSelectedItem();
 			String q = "select * from zgloszenia where Obszar_usterki=?";
