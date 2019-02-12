@@ -15,6 +15,11 @@ import javax.swing.*;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+/**
+ * Klasa s³u¿¹ca do dodania zg³oszenia do bazy danych.
+ * @author Magdalena Robak
+ *
+ */
 public class Zgloszenia extends JFrame {
 
 	private JPanel contentPane;
@@ -27,7 +32,7 @@ public class Zgloszenia extends JFrame {
 	private JFrame frame;
 
 	/**
-	 * Launch the application.
+	 * Uruchomienie aplikacji.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -45,6 +50,11 @@ public class Zgloszenia extends JFrame {
 	Connection polaczeniezbaza=null;
 	private JButton btnNiezrealizowane;
 	
+	/**
+	 * Inicjacja zawartoœci ramki.
+	 * 
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public Zgloszenia() {
 		polaczeniezbaza = Polaczeniezbaza.dbPolaczenie();
 		frame = new JFrame();
@@ -113,32 +123,7 @@ public class Zgloszenia extends JFrame {
 		btnZgo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				LocalDate today = LocalDate.now();
-				
-				try {
-				String q = "insert into zgloszenia (Data_zgloszenia,Miejsce,Realizacja,Opis_problemu,Obszar_usterki,Osoba,Usterka_krytyczna) values (?,?,?,?,?,?,?)";
-				PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
-				String krytyczna = (String)comboBox_1.getSelectedItem();
-				String usterka = (String)comboBox_2.getSelectedItem();
-				String lokalizacja = (String)comboBox.getSelectedItem();
-				pst.setString(1, (today.getYear() + "-" + today.getMonth()+ "-" +today.getDayOfMonth()) );
-				pst.setString(2, txtMiejsce.getText()+ lokalizacja );
-				pst.setString(3, "nie" );
-				pst.setString(4, txtUsterka.getText() );
-				pst.setString(5, usterka );
-				pst.setString(6, txtOsoba.getText() );
-				pst.setString(7, krytyczna);
-				
-	
-				JOptionPane.showMessageDialog(null, "Zg³oszenie dodane"+ "\n Twój numer zg³oszenia to:" + " " +pobierzNumer());
-				
-				pst.execute();
-				pst.close();
-			
-				}catch(Exception e)
-				{
-					JOptionPane.showMessageDialog(null, "B³¹d po³¹czenia");
-				}
+				zglos();
 			}
 		});
 		btnZgo.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -153,11 +138,10 @@ public class Zgloszenia extends JFrame {
 		btnNiezrealizowane = new JButton("Wy\u015Bwietl niezrealizowane\r\n");
 		btnNiezrealizowane.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		btnNiezrealizowane.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				
-				frame.dispose();
-				Niezrealizowane niezrealizowane = new Niezrealizowane();
-				niezrealizowane.setVisible(true);
+				wyswietlNiezrealizowane();
 			}
 		});
 		btnNiezrealizowane.setBounds(168, 11, 297, 35);
@@ -165,6 +149,10 @@ public class Zgloszenia extends JFrame {
 		
 	}
 
+	/**
+	 * Metoda pobieraj¹ca z bazy danych najnowszy numer zg³oszenia.
+	 * @return numer Zwrot numeru zg³oszenia.
+	 */
 	private int pobierzNumer() {
 		
 		try {
@@ -190,5 +178,47 @@ public class Zgloszenia extends JFrame {
 		}
 		return 0;
 		
+	}
+	
+	/**
+	 * Metoda s³u¿¹ca do wstawienia do bazy danych uzupe³nionych przez u¿ytkownika dotycz¹cych zg³oszenia.
+	 */
+	private void zglos() {
+		LocalDate today = LocalDate.now();
+		
+		try {
+		String q = "insert into zgloszenia (Data_zgloszenia,Miejsce,Realizacja,Opis_problemu,Obszar_usterki,Osoba,Usterka_krytyczna) values (?,?,?,?,?,?,?)";
+		PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+		String krytyczna = (String)comboBox_1.getSelectedItem();
+		String usterka = (String)comboBox_2.getSelectedItem();
+		String lokalizacja = (String)comboBox.getSelectedItem();
+		pst.setString(1, (today.getYear() + "-" + today.getMonth()+ "-" +today.getDayOfMonth()) );
+		pst.setString(2, txtMiejsce.getText()+ lokalizacja );
+		pst.setString(3, "nie" );
+		pst.setString(4, txtUsterka.getText() );
+		pst.setString(5, usterka );
+		pst.setString(6, txtOsoba.getText() );
+		pst.setString(7, krytyczna);
+		
+
+		JOptionPane.showMessageDialog(null, "Zg³oszenie dodane"+ "\n Twój numer zg³oszenia to:" + " " +pobierzNumer());
+		
+		pst.execute();
+		pst.close();
+	
+		}catch(Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "B³¹d po³¹czenia");
+		}
+	}
+	
+	/**
+	 * Metoda tworzy nowe okno.
+	 */
+	private void wyswietlNiezrealizowane() {
+		
+		frame.dispose();
+		Niezrealizowane niezrealizowane = new Niezrealizowane();
+		niezrealizowane.setVisible(true);
 	}
 }

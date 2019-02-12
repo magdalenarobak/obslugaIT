@@ -4,10 +4,19 @@ import java.sql.*;
 import javax.swing.*;
 
 
+/**
+ * Klasa umo¿liwiaj¹ca po³¹czenie z baz¹ danych.
+ * @author Magdalena Robak
+ *
+ */
 public class Polaczeniezbaza {
 	
 	Connection polaczenie = null;
 	
+	/**
+	 * Metoda otwieraj¹ca po³¹czenie z baz¹
+	 * @return polaczenie zwrot w postaci obiektu Connection
+	 */
 	public static Connection dbPolaczenie()
 	{
 		try {

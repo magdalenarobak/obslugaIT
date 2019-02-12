@@ -18,6 +18,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.FileWriter;
+/**
+ * Klasa pozwalaj¹ca na wyœwietlanie wybranych danych w tabeli oraz na aktualizacjê ich.
+ * 
+ * @author Magdalena Robak
+ *
+ */
 public class Admin extends JFrame {
 
 	private JPanel contentPane;
@@ -26,9 +32,13 @@ public class Admin extends JFrame {
 	private JComboBox comboBox;
 	private JComboBox comboBox_1;
 	private JComboBox comboBox_2;
+	private JComboBox comboBox_3;
 	private JComboBox comboBox_4;
 	
 
+	/**
+	 * Uruchomienie aplikacji.
+	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -45,6 +55,9 @@ public class Admin extends JFrame {
 	Connection polaczeniezbaza=null;
 	private JTextField textField_1;
 	
+	/**
+	 * Metoda wype³niaj¹ca ComboBox datami zg³oszenia wystêpuj¹cymi w bazie.
+	 */
 	public void wypelnienieComboBox() {
 		try {
 			String q ="select distinct Data_zgloszenia from zgloszenia group by Data_zgloszenia";
@@ -61,6 +74,9 @@ public class Admin extends JFrame {
 				}
 	}
 	
+	/**
+	 * Metoda wype³niaj¹ca ComboBox_2 danymi z bazy.
+	 */
 	public void wypelnienieComboBox_2() {
 		try {
 			String q ="select distinct Miejsce from zgloszenia group by Miejsce";
@@ -75,6 +91,10 @@ public class Admin extends JFrame {
 				}
 	}
 	
+	/**
+	 * Inicjalizacja ramki.
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	public Admin() {
 		polaczeniezbaza = Polaczeniezbaza.dbPolaczenie();
 		
@@ -88,18 +108,7 @@ public class Admin extends JFrame {
 		comboBox = new JComboBox();
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					String data = (String)comboBox.getSelectedItem();
-					String q = "select * from zgloszenia where Data_zgloszenia=?";
-					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
-					pst.setString(1,data);
-					ResultSet rs = pst.executeQuery();
-					
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-				}catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+				data();
 			}
 		});
 		comboBox.setBounds(173, 41, 145, 28);
@@ -108,19 +117,7 @@ public class Admin extends JFrame {
 		comboBox_1 = new JComboBox();
 		comboBox_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					String realizacja = (String)comboBox_1.getSelectedItem();
-					String q = "select * from zgloszenia where Realizacja=?";
-					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
-					pst.setString(1,realizacja);
-					ResultSet rs = pst.executeQuery();
-					
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-				}catch(Exception e)
-				{
-					e.printStackTrace();
-				}
-				
+				realizacja();
 			}
 		});
 
@@ -148,19 +145,7 @@ public class Admin extends JFrame {
 		comboBox_2 = new JComboBox();
 		comboBox_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-				try {
-					String miejsce = (String)comboBox_2.getSelectedItem();
-					String q = "select * from zgloszenia where Miejsce=?";
-					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
-					pst.setString(1,miejsce);
-					ResultSet rs = pst.executeQuery();
-					
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-				}catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+				miejsce();
 			}
 		});
 		comboBox_2.setBounds(173, 119, 145, 33);
@@ -179,23 +164,7 @@ public class Admin extends JFrame {
 		JButton btnSzukaj = new JButton("Szukaj");
 		btnSzukaj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					String q="select * from zgloszenia where Numer_zgloszenia=?";
-					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
-					pst.setString(1,textField.getText());
-					
-					ResultSet rs=pst.executeQuery();
-					
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-					
-					
-					rs.close();
-					pst.close();
-					
-				}catch(Exception e)
-				{
-					JOptionPane.showMessageDialog(null, "B³êdny numer");
-				}
+				szukaj();
 			}
 		});
 		btnSzukaj.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -216,19 +185,7 @@ public class Admin extends JFrame {
 		btnZrealizuj.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				try {
-					String akceptacja = "tak";
-					String q = "update zgloszenia set Realizacja='"+akceptacja+"' where Numer_zgloszenia='"+textField_1.getText()+"' ";
-					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
-					pst.execute();
-					
-					JOptionPane.showMessageDialog(null, "Zlecenie zrealizowane");
-					pst.close();
-					
-				}catch(Exception e)
-				{
-					JOptionPane.showMessageDialog(null, "B³êdny numer zlecenia");
-				}
+				zrealizuj();
 			
 			}
 		});
@@ -245,18 +202,7 @@ public class Admin extends JFrame {
 		comboBox_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				try {
-					String usterka = (String)comboBox_4.getSelectedItem();
-					String q = "select * from zgloszenia where Obszar_usterki=?";
-					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
-					pst.setString(1,usterka);
-					ResultSet rs = pst.executeQuery();
-					
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-				}catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+				usterka();
 			}
 		});
 		comboBox_4.setModel(new DefaultComboBoxModel(new String[] {"sprz\u0119t", "sie\u0107", "AMMS"}));
@@ -273,21 +219,10 @@ public class Admin extends JFrame {
 		lblUsterkaKrytyczna.setBounds(10, 238, 135, 28);
 		contentPane.add(lblUsterkaKrytyczna);
 		
-		JComboBox comboBox_3 = new JComboBox();
+		comboBox_3 = new JComboBox();
 		comboBox_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					String krytyczna = (String)comboBox_3.getSelectedItem();
-					String q = "select * from zgloszenia where Usterka_krytyczna=?";
-					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
-					pst.setString(1,krytyczna);
-					ResultSet rs = pst.executeQuery();
-					
-					table.setModel(DbUtils.resultSetToTableModel(rs));
-				}catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+				krytyczna();
 			}
 		});
 		comboBox_3.setModel(new DefaultComboBoxModel(new String[] {"tak", "nie"}));
@@ -297,46 +232,8 @@ public class Admin extends JFrame {
 		JButton btnGenerujRaport = new JButton("Generuj raport");
 		btnGenerujRaport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				FileWriter plikWy = null;
-				String raport = "raport.txt";
-				try {
-					String q = "select * from zgloszenia";
-					PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
-					ResultSet rs = pst.executeQuery();
-					
-					plikWy = new FileWriter(raport);
-					while(rs.next())
-					{
-						String Numer_zgloszenia = rs.getString("Numer_zgloszenia");
-						String Data_zgloszenia = rs.getString("Data_zgloszenia");
-						String Miejsce = rs.getString("Miejsce");
-						String Realizacja = rs.getString("Realizacja");
-						String Opis_problemu = rs.getString("Opis_problemu");
-						String Obszar_usterki = rs.getString("Obszar_usterki");
-						String Osoba = rs.getString("Osoba");
-						String Usterka_krytyczna = rs.getString("Usterka_krytyczna");
-						
-						
-						plikWy.write(Numer_zgloszenia+" "
-								+Data_zgloszenia+" "
-								+Miejsce+" "
-								+Realizacja+" "
-								+Opis_problemu+" "
-								+Obszar_usterki+" "
-								+Osoba+" "
-								+Usterka_krytyczna+"\r\n");
-						
-					}
-					plikWy.close();
-					
-					Statement stTruncate = polaczeniezbaza.createStatement();
-					stTruncate.execute("delete from zgloszenia");
-					
-					
-				}catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+				
+				generujRaport();
 			}
 		});
 		btnGenerujRaport.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -344,5 +241,183 @@ public class Admin extends JFrame {
 		contentPane.add(btnGenerujRaport);
 		wypelnienieComboBox();
 		wypelnienieComboBox_2();
+	}
+	
+	/**
+	 * Metoda zapisuj¹ca dane z bazy do pliku txt oraz usuwaj¹ca wszystkie rekordy z bazy.
+	 */
+	private void generujRaport() {
+		FileWriter plikWy = null;
+		String raport = "raport.txt";
+		try {
+			String q = "select * from zgloszenia";
+			PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+			ResultSet rs = pst.executeQuery();
+			
+			plikWy = new FileWriter(raport);
+			while(rs.next())
+			{
+				String Numer_zgloszenia = rs.getString("Numer_zgloszenia");
+				String Data_zgloszenia = rs.getString("Data_zgloszenia");
+				String Miejsce = rs.getString("Miejsce");
+				String Realizacja = rs.getString("Realizacja");
+				String Opis_problemu = rs.getString("Opis_problemu");
+				String Obszar_usterki = rs.getString("Obszar_usterki");
+				String Osoba = rs.getString("Osoba");
+				String Usterka_krytyczna = rs.getString("Usterka_krytyczna");
+				
+				
+				plikWy.write(Numer_zgloszenia+" "
+						+Data_zgloszenia+" "
+						+Miejsce+" "
+						+Realizacja+" "
+						+Opis_problemu+" "
+						+Obszar_usterki+" "
+						+Osoba+" "
+						+Usterka_krytyczna+"\r\n");
+				
+			}
+			plikWy.close();
+			
+			Statement stTruncate = polaczeniezbaza.createStatement();
+			stTruncate.execute("delete from zgloszenia");
+			
+			
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Usterka_krytyczna.
+	 */
+	private void krytyczna() {
+		try {
+			String krytyczna = (String)comboBox_3.getSelectedItem();
+			String q = "select * from zgloszenia where Usterka_krytyczna=?";
+			PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+			pst.setString(1,krytyczna);
+			ResultSet rs = pst.executeQuery();
+			
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Data.
+	 */
+	private void data() {
+		try {
+			String data = (String)comboBox.getSelectedItem();
+			String q = "select * from zgloszenia where Data_zgloszenia=?";
+			PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+			pst.setString(1,data);
+			ResultSet rs = pst.executeQuery();
+			
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Realizacja.
+	 */
+	private void realizacja() {
+		try {
+			String realizacja = (String)comboBox_1.getSelectedItem();
+			String q = "select * from zgloszenia where Realizacja=?";
+			PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+			pst.setString(1,realizacja);
+			ResultSet rs = pst.executeQuery();
+			
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Miejsce.
+	 */
+	private void miejsce() {
+		try {
+			String miejsce = (String)comboBox_2.getSelectedItem();
+			String q = "select * from zgloszenia where Miejsce=?";
+			PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+			pst.setString(1,miejsce);
+			ResultSet rs = pst.executeQuery();
+			
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Metoda wyœwietlaj¹ca bazê danych o wybranym numerze zg³oszenia.
+	 */
+	private void szukaj() {
+		try {
+			String q="select * from zgloszenia where Numer_zgloszenia=?";
+			PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+			pst.setString(1,textField.getText());
+			
+			ResultSet rs=pst.executeQuery();
+			
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+			
+			
+			rs.close();
+			pst.close();
+			
+		}catch(Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "B³êdny numer");
+		}
+	}
+	
+	/**
+	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Realizacja.
+	 */
+	private void zrealizuj() {
+		try {
+			String akceptacja = "tak";
+			String q = "update zgloszenia set Realizacja='"+akceptacja+"' where Numer_zgloszenia='"+textField_1.getText()+"' ";
+			PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+			pst.execute();
+			
+			JOptionPane.showMessageDialog(null, "Zlecenie zrealizowane");
+			pst.close();
+			
+		}catch(Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "B³êdny numer zlecenia");
+		}
+	}
+	
+	/**
+	 * Metoda wyœwietlaj¹ca dane z bazy z wybran¹ wartoœci¹ Obszar_usterki.
+	 */
+	private void usterka() {
+		try {
+			String usterka = (String)comboBox_4.getSelectedItem();
+			String q = "select * from zgloszenia where Obszar_usterki=?";
+			PreparedStatement pst = polaczeniezbaza.prepareStatement(q);
+			pst.setString(1,usterka);
+			ResultSet rs = pst.executeQuery();
+			
+			table.setModel(DbUtils.resultSetToTableModel(rs));
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

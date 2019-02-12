@@ -1,5 +1,12 @@
 package it;
-
+/**
+ * Klasa tworz¹ca okno wyboru i przekierowywuj¹ca nas do nastêpnych okien
+ * 
+ * @author Magdalena Robak
+ * @version 1.0.0
+ * 
+ * 
+ */
 import java.sql.*;
 import javax.swing.*;
 import java.awt.EventQueue;
@@ -18,7 +25,9 @@ import java.awt.event.ActionEvent;
 public class Wybor {
 
 	private JFrame frame;
-
+	/**
+	 * Uruchomienie aplikacji
+	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -34,11 +43,18 @@ public class Wybor {
 
 	Connection polaczeniezbaza=null;
 	
+	/**
+	 * Utworzenie aplikacji. Utworzenie po³¹czenia z baz¹ danych.
+	 */
 	public Wybor() {
 		initialize();
 		polaczeniezbaza = Polaczeniezbaza.dbPolaczenie();
 	}
 
+	/**
+	 * Inicjacja zawartoœci ramki.
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 878, 496);
@@ -55,11 +71,10 @@ public class Wybor {
 		btnZgoszenie.setIcon(new ImageIcon(obraz1));
 		
 		btnZgoszenie.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
 				
-				frame.dispose();
-				Zgloszenia administrator = new Zgloszenia();
-				administrator.setVisible(true);
+				zgloszenie();
 	
 			}
 		});
@@ -74,27 +89,7 @@ public class Wybor {
 		btnAdministrator.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				try {
-				    JFrame frame = new JFrame("Admin");
-				    int code = Integer.parseInt(JOptionPane.showInputDialog(frame, "Wprowadz haslo", "Admin", JOptionPane.WARNING_MESSAGE));
-				   
-				    if (code == 1029)
-				    {
-				    System.out.printf("OK");
-				    
-				    frame.dispose();
-			    	Admin zgloszenie = new Admin();
-			    	zgloszenie.setVisible(true);
-					
-				    }
-				    else {
-				    JOptionPane.showMessageDialog(null, "B³¹d autoryzacji");
-
-				    }
-				}catch(Exception e)
-				{
-					JOptionPane.showMessageDialog(null, e);
-				}
+				administrator();
 				  
 			}
 		});
@@ -107,5 +102,44 @@ public class Wybor {
 		lblObraz.setIcon(new ImageIcon(obraz));
 		lblObraz.setBounds(240, 32, 128, 138);
 		frame.getContentPane().add(lblObraz);
+	}
+	
+	/**
+	 * Uruchomienie nowego okna po naciœniêciu przycisku Zg³oszenie.
+	 */
+	private void zgloszenie() {
+		
+		frame.dispose();
+		Zgloszenia administrator = new Zgloszenia();
+		administrator.setVisible(true);
+	}
+	
+	/**
+	 * Uruchomienie nowego okna do wpisania has³a. Po wpisaniu prawid³owego has³a uruchomienie nowego okna.
+	 * 
+	 */
+	private void administrator() {
+		
+		try {
+		    JFrame frame = new JFrame("Admin");
+		    int code = Integer.parseInt(JOptionPane.showInputDialog(frame, "Wprowadz haslo", "Admin", JOptionPane.WARNING_MESSAGE));
+		   
+		    if (code == 1029)
+		    {
+		    System.out.printf("OK");
+		    
+		    frame.dispose();
+	    	Admin zgloszenie = new Admin();
+	    	zgloszenie.setVisible(true);
+			
+		    }
+		    else {
+		    JOptionPane.showMessageDialog(null, "B³¹d autoryzacji");
+
+		    }
+		}catch(Exception e)
+		{
+			JOptionPane.showMessageDialog(null, e);
+		}
 	}
 }

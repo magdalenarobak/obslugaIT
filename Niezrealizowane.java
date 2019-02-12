@@ -9,12 +9,21 @@ import javax.swing.border.EmptyBorder;
 
 import net.proteanit.sql.DbUtils;
 
+/**
+ * Klasa umo¿liwiaj¹ca otworzenie nowego okna z niezrealizowanymi usterkami z bazy danych.
+ * @author Magdalena Robak
+ * 
+ *
+ */
 public class Niezrealizowane extends JFrame {
 
 	private JPanel contentPane;
 	private JTable table;
 
 
+	/**
+	 * Uruchomienie aplikacji.
+	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -29,6 +38,9 @@ public class Niezrealizowane extends JFrame {
 	}
 
 	Connection polaczeniezbaza=null;
+	/**
+	 * Inicjalizacja ramki.
+	 */
 	public Niezrealizowane() {
 		
 		polaczeniezbaza = Polaczeniezbaza.dbPolaczenie();
@@ -47,6 +59,14 @@ public class Niezrealizowane extends JFrame {
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		
+		wybranie();
+		
+	}
+	
+	/**
+	 * Wyœwietlenie bazy danych z niezrealizowanymi usterkami.
+	 */
+	private void wybranie() {
 		try {
 			String x = "nie";
 			String q="select Numer_zgloszenia, Data_zgloszenia, Usterka_krytyczna from zgloszenia where Realizacja='"+x+"'";
@@ -64,7 +84,6 @@ public class Niezrealizowane extends JFrame {
 		{
 			e.printStackTrace();
 		}
-		
 	}
 
 }
